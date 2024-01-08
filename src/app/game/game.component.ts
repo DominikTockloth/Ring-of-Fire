@@ -50,7 +50,7 @@ export class GameComponent {
       }, 1500)
     }
   }
-
+  
   openDialog(): void {
     const dialogRef = this.dialog.open(AddPlayerDialogComponent, {
     });
