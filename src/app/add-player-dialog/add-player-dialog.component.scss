@@ -1,0 +1,16 @@
+.mat-mdc-dialog-actions {
+    justify-content: space-evenly;
+    button{
+        padding: 8px;
+        color: white;
+        background-color: gray;
+        margin-bottom: 10px;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        cursor: pointer;
+        &:hover{
+            background-color: rgb(92, 87, 87);
+        }
+    }
+}

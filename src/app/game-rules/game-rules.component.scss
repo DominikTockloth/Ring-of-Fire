@@ -1,9 +1,26 @@
 .game-rules-card {
     position: absolute;
     bottom: 30px;
-    left: 150px;
-    right: 150px;
+    left: 250px;
+    right: 250px;
     padding: 16px;
+    background-color: rgb(235, 233, 233);
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    -webkit-box-shadow: 6px 5px 128px 9px rgba(35, 35, 35, 0.8);
+    -moz-box-shadow: 6px 5px 128px 9px rgba(35, 35, 35, 0.8);
+    box-shadow: 6px 5px 128px 9px rgba(35, 35, 35, 0.8);
+}
+
+h1 {
+    font-size: 30px;
+}
+
+h3 {
+    font-size: 22px;
 }
 
 .mat-mdc-card-content {
