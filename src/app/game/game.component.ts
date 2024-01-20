@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Game } from '../../models/game';
 import { PlayerComponent } from '../player/player.component';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,6 +7,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { AddPlayerDialogComponent } from './../add-player-dialog/add-player-dialog.component';
 import { GameRulesComponent } from './../game-rules/game-rules.component'
+import { Firestore, collection, onSnapshot, addDoc, doc } from '@angular/fire/firestore';
+import { ActivatedRoute } from '@angular/router';
+
 
 
 
@@ -20,21 +23,67 @@ import { GameRulesComponent } from './../game-rules/game-rules.component'
 
 
 export class GameComponent {
+  route: ActivatedRoute = inject(ActivatedRoute);
+  firestore: Firestore = inject(Firestore);
+
   currentCard: string = '';
   result: string | undefined;
   pickCardAnimation = false;
   game!: Game;
+  unsubGames;
 
   constructor(public dialog: MatDialog) {
+    this.unsubGames = this.getGamesList();
     this.newGame();
+    this.route.params.subscribe((params) => {
+      params['id'];
+    })
+    
+
   }
 
+  ngOnInit(): void {
 
+  }
+
+  ngOnDestroy() {
+    this.unsubGames();
+  }
 
   newGame() {
     this.game = new Game();
-    console.log(this.game);
+    // this.addGame(this.game);
+
   }
+/*
+  async addGame(game:{}) {
+    try {
+      const docRef = await 
+      console.log('Dokument erfolgreich hinzugefügt mit der ID:', docRef.id);
+    } catch (error) {
+      console.error('Fehler beim Hinzufügen des Dokuments:', error);
+    }
+  }
+*/
+
+  getGamesList() {
+    return onSnapshot(this.getCollectionRef(), (list) => {
+      list.forEach(element => {
+        console.log(element.id);
+      });
+    })
+  }
+
+
+
+  getCollectionRef() {
+    return collection(this.firestore, 'games');
+  }
+
+  getSingleDocRef(colId: string, docId: string) {
+    return doc(collection(this.firestore, colId), docId);
+  }
+
 
   takeCard() {
     if (!this.pickCardAnimation) {
@@ -50,7 +99,7 @@ export class GameComponent {
       }, 1500)
     }
   }
-  
+
   openDialog(): void {
     const dialogRef = this.dialog.open(AddPlayerDialogComponent, {
     });

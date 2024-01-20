@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+
+import { Component , inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { StartscreenComponent } from './startscreen/startscreen.component'
@@ -13,7 +14,15 @@ import { MatDialogModule } from '@angular/material/dialog';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, StartscreenComponent, GameComponent, MatButtonModule, MatIconModule, AddPlayerDialogComponent, MatDialogModule],
+  imports: [ CommonModule,
+     RouterOutlet,
+      StartscreenComponent,
+       GameComponent,
+        MatButtonModule,
+         MatIconModule,
+          AddPlayerDialogComponent,
+           MatDialogModule ,
+           ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

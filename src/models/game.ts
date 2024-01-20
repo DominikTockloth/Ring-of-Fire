@@ -13,6 +13,15 @@ export class Game {
         }
         shuffleArray(this.cardStack)
     }
+
+  public toJson(){
+        return {
+            players: this.players,
+            currentPlayer: this.currentPlayer,
+            playedCards: this.playedCards,
+            cardStack: this.cardStack,
+        }
+    }
 }
 
 function shuffleArray(array: any[]): void {
