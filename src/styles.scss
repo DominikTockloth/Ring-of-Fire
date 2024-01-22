@@ -5,3 +5,17 @@ body{
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.scroll-div{
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+
+
+

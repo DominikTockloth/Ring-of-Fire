@@ -1,8 +1,13 @@
-<app-player class="player-position" *ngFor="let player of game.players; let i = index;"
+<app-player class="player-position " *ngFor="let player of game.players; let i = index;"
     [ngStyle]="{'top.px': 90 + (i * 100) }" [name]="player" [playerActive]="i == game.currentPlayer"></app-player>
+
+ <div class="scroll-div"> <app-player-mobile *ngFor="let player of game.players; let i = index;"
+        [ngStyle]="{'left.px': 30 + (i * 50) }" [name]="player"
+        [playerActive]="i == game.currentPlayer"></app-player-mobile></div>
 
 
 <div class="board">
+   
     <div class="card-stack">
         <!--  Stack of cards -->
         <img *ngFor="let c of [0, 1 ,2 ,3 ,4 ]; let i = index;" [ngStyle]="{'right.px' : i * 10}"
@@ -13,13 +18,13 @@
         <img *ngFor="let card of game.playedCards" src="assets/img/{{ card }}.png" class="played-card">
 
         <!--  Current Card (Animation)-->
-        <img class=" pick-card" (click)="takeCard()" *ngIf="pickCardAnimation" [class.pick-card]="pickCardAnimation"
-            style="right:50px" src="assets/img/{{ currentCard }}.png">
+        <img class=" pick-card" (click)="takeCard()" *ngIf="game.pickCardAnimation"
+            [class.pick-card]="game.pickCardAnimation" style="right:50px" src="assets/img/{{ game.currentCard }}.png">
     </div>
 </div>
-<app-game-rules [card]="currentCard"></app-game-rules>
+<app-game-rules [card]="game.currentCard"></app-game-rules>
 
-<button mat-fab  class="btn-add" (click)="openDialog()">
+<button mat-fab class="btn-add" (click)="openDialog()">
     <mat-icon>add</mat-icon>
-    
+
 </button>

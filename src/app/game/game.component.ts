@@ -9,6 +9,7 @@ import { AddPlayerDialogComponent } from './../add-player-dialog/add-player-dial
 import { GameRulesComponent } from './../game-rules/game-rules.component'
 import { Firestore, collection, onSnapshot, doc, updateDoc } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
+import { PlayerMobileComponent } from '../player-mobile/player-mobile.component';
 
 
 
@@ -16,7 +17,7 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [CommonModule, PlayerComponent, AddPlayerDialogComponent, MatButtonModule, MatIconModule, GameRulesComponent],
+  imports: [CommonModule, PlayerComponent, AddPlayerDialogComponent, MatButtonModule, MatIconModule, GameRulesComponent ,PlayerMobileComponent],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
@@ -25,10 +26,7 @@ import { ActivatedRoute } from '@angular/router';
 export class GameComponent {
   route: ActivatedRoute = inject(ActivatedRoute);
   firestore: Firestore = inject(Firestore);
-
-  currentCard: string = '';
   result: string | undefined;
-  pickCardAnimation = false;
   game!: Game;
   gameId: string = '';
   unsubGames;
@@ -88,16 +86,16 @@ export class GameComponent {
 
   /** Simulate taking a card in the game. */
   takeCard() {
-    if (!this.pickCardAnimation) {
-      this.currentCard = this.game.cardStack.pop()!;
-      console.log(this.currentCard);
-      this.pickCardAnimation = true;
+    if (!this.game.pickCardAnimation) {
+      this.game.currentCard = this.game.cardStack.pop()!;
+      console.log(this.game.currentCard);
+      this.game.pickCardAnimation = true;
       this.game.currentPlayer++;
       this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
       this.saveGame();
       setTimeout(() => {
-        this.game.playedCards.push(this.currentCard);
-        this.pickCardAnimation = false;
+        this.game.playedCards.push(this.game.currentCard);
+        this.game.pickCardAnimation = false;
         this.saveGame();
       }, 1500);
     }

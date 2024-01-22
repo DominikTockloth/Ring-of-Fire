@@ -32,12 +32,12 @@
 
 .pick-card {
     animation: pick-card-animation 1.5s ease-in-out;
-    transform: scale(1.35) translateX(-130px) translateY(-180px) rotate(10deg);
+    transform: scale(1.35) translateX(130px) translateY(-160px) rotate(10deg);
 }
 
 .played-card {
     right: 50px;
-    transform: scale(1.35) translateX(-130px) translateY(-180px) rotate(10deg);
+    transform: scale(1.35) translateX(130px) translateY(-160px) rotate(10deg);
 }
 
 @keyframes pick-card-animation {
@@ -54,7 +54,7 @@
     }
 
     100% {
-        transform: scale(1.35) translateX(-130px) translateY(-180px) rotate(10deg);
+        transform: scale(1.35) translateX(130px) translateY(-160px) rotate(10deg);
     }
 }
 
@@ -74,4 +74,16 @@
         background-color: rgb(130, 203, 22);
         cursor: pointer;
     }
+    @media(max-width:960px){
+        bottom: 130px;
+        right: 15px;
+    }
+}
+
+.hide-desktop{
+    display: none;
+}
+
+.hide-mobile{
+    display: none;
 }
