@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { AddPlayerDialogComponent } from './../add-player-dialog/add-player-dialog.component';
 import { GameRulesComponent } from './../game-rules/game-rules.component'
-import { Firestore, collection, onSnapshot, addDoc, doc } from '@angular/fire/firestore';
+import { Firestore, collection, onSnapshot, doc, updateDoc } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 
 
@@ -30,6 +30,7 @@ export class GameComponent {
   result: string | undefined;
   pickCardAnimation = false;
   game!: Game;
+  gameId: string = '';
   unsubGames;
 
   constructor(public dialog: MatDialog) {
@@ -37,76 +38,91 @@ export class GameComponent {
     this.newGame();
     this.route.params.subscribe((params) => {
       params['id'];
-    })
-    
-
+      this.gameId = params['id'];
+    });
   }
 
-  ngOnInit(): void {
 
-  }
-
+  /** Cleanup function to unsubscribe from Firebase snapshot listener. */
   ngOnDestroy() {
     this.unsubGames();
   }
 
+  /** Initialize a new game. */
   newGame() {
     this.game = new Game();
-    // this.addGame(this.game);
-
   }
-/*
-  async addGame(game:{}) {
-    try {
-      const docRef = await 
-      console.log('Dokument erfolgreich hinzugefügt mit der ID:', docRef.id);
-    } catch (error) {
-      console.error('Fehler beim Hinzufügen des Dokuments:', error);
+
+  /** Save the current game state to Firebase. */
+  saveGame() {
+    let collectionRef = collection(this.firestore, 'games');
+    if (this.gameId) {
+      const gameDocRef = doc(collectionRef, this.gameId);
+      updateDoc(gameDocRef, this.game.toJson());
     }
   }
-*/
 
+  /** Retrieve the list of games from Firebase. */
   getGamesList() {
     return onSnapshot(this.getCollectionRef(), (list) => {
       list.forEach(element => {
         console.log(element.id);
       });
-    })
+    });
   }
 
-
-
+  /** Get a reference to the game collection. */
   getCollectionRef() {
     return collection(this.firestore, 'games');
   }
 
+  /**
+   * Get a reference to a specific document in the collection.
+   * @param colId - Collection ID.
+   * @param docId - Document ID.
+   * @returns Document reference.
+   */
   getSingleDocRef(colId: string, docId: string) {
     return doc(collection(this.firestore, colId), docId);
   }
 
-
+  /** Simulate taking a card in the game. */
   takeCard() {
     if (!this.pickCardAnimation) {
-      this.currentCard = this.game.cardStack.pop()!;  // exclamation mark (!) to inform that the string is definetely not null or undefined
+      this.currentCard = this.game.cardStack.pop()!;
       console.log(this.currentCard);
       this.pickCardAnimation = true;
       this.game.currentPlayer++;
-      this.game.currentPlayer = this.game.currentPlayer % this.game.players.length; // modulo operator
-
+      this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
+      this.saveGame();
       setTimeout(() => {
         this.game.playedCards.push(this.currentCard);
         this.pickCardAnimation = false;
-      }, 1500)
+        this.saveGame();
+      }, 1500);
     }
   }
 
+  /** Open the add player dialog. */
   openDialog(): void {
-    const dialogRef = this.dialog.open(AddPlayerDialogComponent, {
-    });
+    const dialogRef = this.dialog.open(AddPlayerDialogComponent, {});
     dialogRef.afterClosed().subscribe((name: string) => {
       if (name && name.length > 0) {
         this.game.players.push(name);
+        this.saveGame();
       }
     });
   };
 }
+
+
+
+
+
+
+
+
+
+
+
+

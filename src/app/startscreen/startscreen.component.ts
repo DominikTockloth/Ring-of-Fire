@@ -19,10 +19,6 @@ export class StartscreenComponent {
 
   async startGame() {
     let game = new Game();
-    this.game.currentPlayer = game.currentPlayer;
-    this.game.players = game.players;
-    this.game.cardStack = game.cardStack;
-    this.game.playedCards = game.playedCards;
     await addDoc(this.getCollectionRef(), game.toJson()).then((gameInfo) =>
       this.router.navigateByUrl('/game/' + gameInfo.id));
 
