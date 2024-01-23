@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { AddPlayerDialogComponent } from './../add-player-dialog/add-player-dialog.component';
 import { GameRulesComponent } from './../game-rules/game-rules.component'
-import { Firestore, collection, onSnapshot, doc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, collection, onSnapshot, doc, updateDoc, docData } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { PlayerMobileComponent } from '../player-mobile/player-mobile.component';
 
@@ -17,7 +17,7 @@ import { PlayerMobileComponent } from '../player-mobile/player-mobile.component'
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [CommonModule, PlayerComponent, AddPlayerDialogComponent, MatButtonModule, MatIconModule, GameRulesComponent ,PlayerMobileComponent],
+  imports: [CommonModule, PlayerComponent, AddPlayerDialogComponent, MatButtonModule, MatIconModule, GameRulesComponent, PlayerMobileComponent],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
@@ -37,6 +37,18 @@ export class GameComponent {
     this.route.params.subscribe((params) => {
       params['id'];
       this.gameId = params['id'];
+      let docRef = doc(this.firestore, 'games', this.gameId);
+      docData(docRef).subscribe(game => {
+        if (game) {
+          this.game.cardStack = game['cardStack'];
+          this.game.currentCard = game['currentCard'];
+          this.game.currentPlayer = game['currentPlayer'];
+          this.game.playedCards = game['playedCards'];
+          this.game.players = game['players'];
+          this.game.pickCardAnimation = game['pickCardAnimation'];
+        }
+      }
+      )
     });
   }
 
@@ -88,7 +100,6 @@ export class GameComponent {
   takeCard() {
     if (!this.game.pickCardAnimation) {
       this.game.currentCard = this.game.cardStack.pop()!;
-      console.log(this.game.currentCard);
       this.game.pickCardAnimation = true;
       this.game.currentPlayer++;
       this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
